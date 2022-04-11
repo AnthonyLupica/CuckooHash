@@ -109,36 +109,35 @@ Rubric:
 
 
 
-                                                                                              75 points
- Research
+                                                                                              
+               Research                                                75 points
+ 
  The format of the work follows the specified guidelines. The hypothesis is well formed.
  The information regarding the data structure of this research is solid and articulate. The
  project implemented well considered test cases; thorough and solid testing. The results
- and measures from the experiments are well outlined and well documented. The analysis              75
- is thorough and accurate, and uses good techniques and proofs for considering both the
+ and measures from the experiments are well outlined and well documented. The analysis              
+ is thorough and accurate, and uses good techniques and proofs for considering both the            
  data structure’s space complexity and the runtime complexity of each structure overall.
  The resulting final analysis compares and concludes, with proof, what is optimally
  efficient (worse case), and supports the hypothesis.
 
 
 
-                                      Coding and Accuracy                                     25 points
-        Program is properly documented, such as header and comments, purpose, and
-  instructions on how to use your program. Implementations follow from design patterns.
-     The program is well designed, logically sound (no segment faults), produces correct
-  results (eg., correctness after insertion, removal, etc…). Program solution code does not
-   use the STL for its data structure. IMPORTANT: Program properly handles memory (no
-                                                                                                    25
-  memory leaks). The behavior of the code maintains the properties of the data structure
-  accurately and predictably. For example, the properties of a BST or max-heap and so on,
-      are not violated, no duplicates allowed where applicable, performs all of the basic
-       operations of an AVL tree or linked list or handles all stack operations or probing
-                                         functions, etc…
+               Coding and Accuracy                                     25 points
+        
+Program is properly documented, such as header and comments, purpose, and
+instructions on how to use your program. Implementations follow from design patterns.
+The program is well designed, logically sound (no segment faults), produces correct
+results (eg., correctness after insertion, removal, etc…). Program solution code does not
+use the STL for its data structure. IMPORTANT: Program properly handles memory (no                 
+memory leaks). The behavior of the code maintains the properties of the data structure
+accurately and predictably. For example, the properties of a BST or max-heap and so on,
+are not violated, no duplicates allowed where applicable, performs all of the basic
+operations of an AVL tree or linked list or handles all stack operations or probing
+functions, etc…
 
 
-
-
-                                        Total =                                                    100
+                 Total =                                                100 points
 
 How do I know that my project will be graded?
 Did you:
