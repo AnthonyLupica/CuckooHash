@@ -16,6 +16,17 @@ using namespace std;
 
 int main()
 {
-    cout << "Hello world!" << endl;
+
+{
+    CuckooHash hashy;
+    hashy.insert("Pitt", "Brad");
+    hashy.insert("Pitt", "Brad");
+
+    
+
+}
+ 
+    
+    
     return 0;
 }
