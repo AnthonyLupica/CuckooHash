@@ -5,10 +5,10 @@
 
     Implementation file for a hash table class using the cuckoo hashing technique
 
-    The hash table implements a "celebrity lookup." The last name of a celebrity
-    is used as the key to quickly find if any entries in the table are a match.
-    Ex.] std::cout << CuckooHash.search("Pitt");
-         --> "Brad Pitt"
+    The hash table implements a celebrity birth-year lookup. The name of a celebrity
+    (and non-famous people alike) can be used as the key to quickly find their birth year.
+    Ex.] std::cout << CuckooHash.search("Brad Pitt");
+         --> "1963"
 */
 
 #include "CuckooHash.hpp"
@@ -25,15 +25,15 @@
 CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0])
 {
     std::cout << "Default constructor was called";
-    table1 = new Celebrity[tableSize];
-    table2 = new Celebrity[tableSize];
+    table1 = new HashNode[tableSize];
+    table2 = new HashNode[tableSize];
 }
 
-CuckooHash::CuckooHash(const string &key, const string &value) : tableSize(PRIME_LIST[0])
+CuckooHash::CuckooHash(const string &key, const int value) : tableSize(PRIME_LIST[0])
 {
     std::cout << "key-value constructor was called";
-    table1 = new Celebrity[tableSize];
-    table2 = new Celebrity[tableSize];
+    table1 = new HashNode[tableSize];
+    table2 = new HashNode[tableSize];
 }
 
 CuckooHash::~CuckooHash()
@@ -43,34 +43,34 @@ CuckooHash::~CuckooHash()
     delete[] table2;
 }
 
-void CuckooHash::insert(const string &key, const string &value)
+void CuckooHash::insert(const string &key, const int value)
  {
     int index1 = hash1(key);
     int index2 = hash2(key);
 
-    if (table1[index1].firstName.empty())
+    if (table1[index1].name.empty())
      {
         std::cout << " it was empty";
      } 
 
     // the hash location is occupied
-    if (!table1[index1].lastName.empty())
+    if (!table1[index1].name.empty())
     {
         // save the key and value 
-        string evicteeKey = table1[index1].lastName;
-        string evicteeValue = table1[index1].firstName;
+        string evicteeKey = table1[index1].name;
+        int evicteeValue = table1[index1].birthYear;
 
         // insert new occupant 
-        table1[index1].lastName = key;
-        table1[index1].firstName = value;
+        table1[index1].name = key;
+        table1[index1].birthYear = value;
     }
     else 
     {
-        table1[index1] = {value, key};
+        table1[index1] = {key, value};
     }
 
 
-     std::cout << table1[index1].firstName << " " << table1[index1].lastName;
+     std::cout << table1[index1].birthYear << " " << table1[index1].name;
 }
 
 int CuckooHash::hash1(const string &key)

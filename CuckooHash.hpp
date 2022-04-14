@@ -5,10 +5,10 @@
 
     Header file for a hash table class using the cuckoo hashing technique
 
-    The hash table implements a "celebrity lookup." The last name of a celebrity
-    is used as the key to quickly find if any entries in the table are a match.
-    Ex.] std::cout << CuckooHash.search("Pitt");
-         --> "Brad Pitt"
+    The hash table implements a celebrity birth-year lookup. The name of a celebrity
+    (and non-famous people alike) can be used as the key to quickly find their birth year.
+    Ex.] std::cout << CuckooHash.search("Brad Pitt");
+         --> "1963"
 */
 
 #ifndef CUCKOOHASH_HPP_INCLUDED
@@ -25,26 +25,26 @@ class CuckooHash
 {
     private:
        
-        struct Celebrity 
+        struct HashNode 
         {
-            string firstName; // value 
-            string lastName;  // key 
+            string name;   // key 
+            int birthYear; // value 
         };
 
-        int tableSize;            // table size (will use PRIME_LIST for rehash values)
-        struct Celebrity* table1; // the primary hash table 
-        struct Celebrity* table2; // the secondary "eviction" table 
+        int tableSize;           // table size (will use PRIME_LIST for rehash values)
+        struct HashNode* table1; // the primary hash table 
+        struct HashNode* table2; // the secondary "eviction" table 
 
         int hash1(const string &key); // hash function for table1
         int hash2(const string &key); // hash function for table2
 
     public: 
 
-        CuckooHash();                                        // default constructor
-        CuckooHash(const string &key, const string &value);  // constructor taking an initial key and value 
-        ~CuckooHash();                                       // destructor 
+        CuckooHash();                                    // default constructor
+        CuckooHash(const string &key, const int value);  // constructor taking an initial key and value 
+        ~CuckooHash();                                   // destructor 
 
-        void insert(const string &key, const string &value); // insert method 
+        void insert(const string &key, const int value); // insert method 
          
 };
 

@@ -19,11 +19,8 @@ int main()
 
 {
     CuckooHash hashy;
-    hashy.insert("Pitt", "Brad");
-    hashy.insert("Pitt", "Brad");
-
-    
-
+    hashy.insert("Brad Pitt", 1963);
+    hashy.insert("Anthony Lupica", 2000);
 }
  
     
