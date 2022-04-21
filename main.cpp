@@ -12,7 +12,7 @@
 #include "CuckooHash.hpp"
 #include <iostream>
 
-using namespace std;
+using std::cout;
 
 int main()
 {
@@ -20,8 +20,8 @@ int main()
 {
     CuckooHash hashy;
     
-    hashy.insert("brad", 10);
-    hashy.insert("brad", 1234);
+    hashy.insert("brad", 1000);
+    cout << hashy.search("nick");
 
     
 }

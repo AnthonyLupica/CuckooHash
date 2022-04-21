@@ -21,9 +21,9 @@
 *  will use the next value (doubled and rounded up to the nearest
 *  prime number).
 */
-CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCount(0)
+CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCount1(0), nodeCount2(0)
 {
-    std::cout << "Default constructor was called\n";
+    std::cout << "\nDefault constructor was called\n\n";
     table1 = new HashNode[tableSize];
     table2 = new HashNode[tableSize];
 }
@@ -35,9 +35,9 @@ CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCo
 *  will use the next value (doubled and rounded up to the nearest
 *  prime number). Take in an intital key and value.
 */
-CuckooHash::CuckooHash(const string &key, const int value) : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCount(0)
+CuckooHash::CuckooHash(const string &key, const int value) : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCount1(0), nodeCount2(0)
 {
-    std::cout << "key-value constructor was called\n";
+    std::cout << "\nkey-value constructor was called\n\n";
     table1 = new HashNode[tableSize];
     table2 = new HashNode[tableSize];
 
@@ -48,25 +48,99 @@ CuckooHash::CuckooHash(const string &key, const int value) : tableSize(PRIME_LIS
 // Destructor
 CuckooHash::~CuckooHash()
 {
-    std::cout << "destructor was called\n";
+    std::cout << "\ndestructor was called\n\n";
     delete[] table1;
     delete[] table2;
 }
 
+/* insert() 
+*
+*  
+*/
 void CuckooHash::insert(const string &key, const int value)
 {
-    if (isFourDigit(value))
+    // compute both hash values in order to check if this key is a duplicate
+    int homePosition = hash1(key);     // position found for the first table 
+    int evictionPosition = hash2(key); // position found for the second table
+
+    // CONDITION ONE: key must be unique amongst both tables 
+    // use hash values to index into the tables and verify this key is unique
+    if (table1[homePosition].name == key || table2[evictionPosition].name == key)
     {
-        int position1 = hash1(key); // position found for the first table 
+        std::cerr << "key " << "'" << key << "' " << "already exists within the hash table\n";
         
-        // try to insert at that spot 
+        return;
     }
-    else
+    
+    // CONDITION TWO: value must be four digits
+    if (!isFourDigit(value)) 
     {
-        std::cerr << "The birth year provided must be four digits\n";
+        std::cerr << "The birth year must be in the form of four digits\n";
+
+        return;
+    }
+
+    // CONDITION THREE: We have good data, now check that the tables are less than half full.
+    // if not, call rehash()
+    if ((nodeCount1 >= tableSize / 2) || (nodeCount2 >= tableSize / 2))
+    {
+        //rehash();
+    }
+    
+    // try to insert in the home position
+    
+    // save a temporary copy of the data already there, if it exists
+    string tempKey;
+    int tempValue = 0;
+    bool needEvict = 0;
+    if (!table1[homePosition].name.empty())
+    {
+        tempKey = table1[homePosition].name;
+        tempValue = table1[homePosition].birthYear;
+        needEvict = 1;
+    }
+
+    // new data replaces the old occupant as the new owner of the index
+    table1[homePosition].name = key;
+    table1[homePosition].birthYear = value;
+
+    // if there was an eviction (flag is turned on), then call evict()
+    if (needEvict)
+    {
+        // call evict
+        // evict(tempKey, tempValue);
     }
 
     return;
+}
+
+/* search() 
+*
+*  looks first in table1 to see if the key can be found at its hash location.
+*  If not present, looks instead in table2 for the record. If found in either table,
+*  the birth year is returned. If the record is not found at either hash location, -1 is returned.
+*/
+int CuckooHash::search(const string &key)
+{
+    int homePosition = hash1(key); // position found for the first table 
+
+    // if the key at that index matches the key argument, return the year
+    if (table1[homePosition].name == key)
+    {
+        return table1[homePosition].birthYear;
+    }
+    else
+    {
+        int evictionPosition = hash2(key); // position found for the second table
+        // if the key at that index matches the key argument, return the year
+        if (table2[evictionPosition].name == key)
+        {
+            return table2[evictionPosition].birthYear;
+        }
+    }
+
+    // -1 signals that the record could not be found
+    return -1;
 }
 
 /* hash1 
@@ -139,5 +213,3 @@ bool CuckooHash::isFourDigit(const int value)
         return 0;
     }
 }
-
-
