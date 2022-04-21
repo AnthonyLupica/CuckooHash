@@ -45,7 +45,10 @@ CuckooHash::CuckooHash(const string &key, const int value) : tableSize(PRIME_LIS
     insert(key, value);
 }
 
-// Destructor
+/* ~Destructor() 
+*
+*  Destructs both hash tables used for the CuckooHash object.
+*/
 CuckooHash::~CuckooHash()
 {
     std::cout << "\ndestructor was called\n\n";
@@ -85,6 +88,8 @@ void CuckooHash::insert(const string &key, const int value)
     if ((nodeCount1 >= tableSize / 2) || (nodeCount2 >= tableSize / 2))
     {
         //rehash();
+
+        // make sure rehash() updates both tableSize and tableSizeCounter
     }
     
     // try to insert in the home position
@@ -109,6 +114,8 @@ void CuckooHash::insert(const string &key, const int value)
     {
         // call evict
         // evict(tempKey, tempValue);
+
+        // it will be evict()'s responsibility to update nodeCount1 and nodeCount2
     }
 
     return;

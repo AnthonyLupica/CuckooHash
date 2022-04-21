@@ -34,7 +34,7 @@ class CuckooHash
         int tableSize;           // table size (will use PRIME_LIST for rehash values)
         struct HashNode* table1; // the primary hash table 
         struct HashNode* table2; // the secondary "eviction" table 
-        int tableSizeCounter;    // keeps track of which index of PRIME_LIST is in use
+        int tableSizeCounter;    // keeps track of which index of PRIME_LIST is in use (for rehash())
         int nodeCount1;          // keeps track of the number of initialized nodes in table1
         int nodeCount2;          // keeps track of the number of initialized nodes in table2
 
@@ -45,7 +45,7 @@ class CuckooHash
     public: 
 
         CuckooHash();                                    // default constructor
-        CuckooHash(const string &key, const int value);  // constructor taking an initial key and value 
+        CuckooHash(const string &key, const int value);  // constructor taking an initial key - value 
         ~CuckooHash();                                   // destructor 
 
         int search(const string &key);                   // search method
