@@ -16,15 +16,6 @@ using std::cout;
 
 int main()
 {
-
-{
-    CuckooHash hashy;
-
-
-    
-}
- 
-    
-    
+  
     return 0;
 }
