@@ -18,8 +18,8 @@
 
 using std::string;
 
-// list of prime numbers beginning at 11. Double and round up to nearest prime
-const int PRIME_LIST[] = { 11, 23, 47, 97, 197, 397, 797, 1597, 3203, 6421, 12853, 25717 };
+// list of prime numbers beginning at 11 for table sizes. Double and round up to nearest prime
+const int PRIME_LIST[] = { 11, 23, 47, 97, 197, 397, 797, 1597, 3203, 6421, 12853, 25717, 51481 };
 
 class CuckooHash
 {
@@ -34,6 +34,7 @@ class CuckooHash
         int tableSize;           // table size (will use PRIME_LIST for rehash values)
         struct HashNode* table1; // the primary hash table 
         struct HashNode* table2; // the secondary "eviction" table 
+        int tableSizeCounter;    // keeps track of which value in PRIME_LIST is in use
 
         int hash1(const string &key); // hash function for table1
         int hash2(const string &key); // hash function for table2

@@ -16,26 +16,33 @@
 
 /* Default Constructor 
 *
-*  Initialize tableSize to 11. 
+*  Initialize tableSize to the first value in PRIME_LIST. 
 *  When a rehash is necessary, the tableSize
-*  will be doubled, and rounded up to the nearest
-*  prime number.
+*  will use the next value (doubled and rounded up to the nearest
+*  prime number).
 */
-
-CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0])
+CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0]), tableSizeCounter(0)
 {
     std::cout << "Default constructor was called";
     table1 = new HashNode[tableSize];
     table2 = new HashNode[tableSize];
 }
 
-CuckooHash::CuckooHash(const string &key, const int value) : tableSize(PRIME_LIST[0])
+/* key-value Constructor 
+*
+*  Initialize tableSize to the first value in PRIME_LIST. 
+*  When a rehash is necessary, the tableSize
+*  will use the next value (doubled and rounded up to the nearest
+*  prime number). Take in an intital key and value.
+*/
+CuckooHash::CuckooHash(const string &key, const int value) : tableSize(PRIME_LIST[0]), tableSizeCounter(0)
 {
     std::cout << "key-value constructor was called";
     table1 = new HashNode[tableSize];
     table2 = new HashNode[tableSize];
 }
 
+// Destructor
 CuckooHash::~CuckooHash()
 {
     std::cout << "destructor was called";
@@ -44,14 +51,14 @@ CuckooHash::~CuckooHash()
 }
 
 void CuckooHash::insert(const string &key, const int value)
- {
+{
     int index1 = hash1(key);
     int index2 = hash2(key);
 
     if (table1[index1].name.empty())
-     {
+    {
         std::cout << " it was empty";
-     } 
+    } 
 
     // the hash location is occupied
     if (!table1[index1].name.empty())
@@ -70,38 +77,46 @@ void CuckooHash::insert(const string &key, const int value)
     }
 
 
-     std::cout << table1[index1].birthYear << " " << table1[index1].name;
+    std::cout << table1[index1].birthYear << " " << table1[index1].name;
 }
 
+/* hash1 
+*
+*  hash function for table 1 
+*/
 int CuckooHash::hash1(const string &key)
- {
-     // iterate through the string and find a hash value according 
-     // to character ascii values (dependent on their position i within the string)
-     
-     int hashTotal = 0; 
-     int mult = 29;              
-     for (int i = 0; i < key.length(); ++i)
-     {   
-         mult += i; 
-         hashTotal += key[i] * mult;
-     }
+{
+    // iterate through the string and find a hash value according 
+    // to character ascii values (dependent on their position i within the string)
+    
+    int hashTotal = 0; 
+    int mult = 29;              
+    for (int i = 0; i < key.length(); ++i)
+    {   
+        mult += i; 
+        hashTotal += key[i] * mult;
+    }
 
-     return hashTotal % tableSize;
- }
+    return hashTotal % tableSize;
+}
 
- int CuckooHash::hash2(const string &key)
- {
-     // iterate through the string and find a hash value according 
-     // to character ascii values (dependent on their position i within the string)
-     
-     int hashTotal = 0; 
-     int mult = 29;              
-     for (int i = 0; i < key.length(); ++i)
-     {    
-         hashTotal += mult * (key[i] + i);
-     }
+/* hash2 
+*
+*  hash function for table 2
+*/
+int CuckooHash::hash2(const string &key)
+{
+    // iterate through the string and find a hash value according 
+    // to character ascii values (dependent on their position i within the string)
+    
+    int hashTotal = 0; 
+    int mult = 31;              
+    for (int i = 0; i < key.length(); ++i)
+    {    
+        hashTotal += mult * (key[i] + i);
+    }
 
-     return hashTotal % tableSize;
+    return hashTotal % tableSize;
 }
 
 

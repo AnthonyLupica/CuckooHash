@@ -6,7 +6,7 @@
     Driver file using the CuckooHash class
 
     Test Cases are used to display the functionality and analyze the performance
-    of a hash table using the cuckoo hashing technique
+    of a hash table that uses the cuckoo hashing technique
 */
 
 #include "CuckooHash.hpp"
@@ -19,8 +19,8 @@ int main()
 
 {
     CuckooHash hashy;
-    hashy.insert("Brad Pitt", 1963);
-    hashy.insert("Anthony Lupica", 2000);
+    
+    
 }
  
     
