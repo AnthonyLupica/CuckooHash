@@ -34,10 +34,12 @@ class CuckooHash
         int tableSize;           // table size (will use PRIME_LIST for rehash values)
         struct HashNode* table1; // the primary hash table 
         struct HashNode* table2; // the secondary "eviction" table 
-        int tableSizeCounter;    // keeps track of which value in PRIME_LIST is in use
+        int tableSizeCounter;    // keeps track of which index of PRIME_LIST is in use
+        int nodeCount;           // keeps track of the number of initialized nodes in the table
 
-        int hash1(const string &key); // hash function for table1
-        int hash2(const string &key); // hash function for table2
+        int hash1(const string &key);      // hash function for table1
+        int hash2(const string &key);      // hash function for table2
+        bool isFourDigit(const int value); // predicate for veryifing a valid birth year         
 
     public: 
 
@@ -46,7 +48,6 @@ class CuckooHash
         ~CuckooHash();                                   // destructor 
 
         void insert(const string &key, const int value); // insert method 
-         
 };
 
 #endif // CUCKOOHASH_HPP_INCLUDED

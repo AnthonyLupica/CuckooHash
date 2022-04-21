@@ -20,6 +20,9 @@ int main()
 {
     CuckooHash hashy;
     
+    hashy.insert("brad", 10);
+    hashy.insert("brad", 1234);
+
     
 }
  
