@@ -108,7 +108,14 @@ void CuckooHash::insert(const string &key, const int value)
     // new data replaces the old occupant as the new owner of the index
     table1[homePosition].name = key;
     table1[homePosition].birthYear = value;
-
+    
+    // only increment nodeCount1 if the new key didn't evict a record
+    // (in which case we would be adding a record to table1 but also removing a record)
+    if (needEvict = 0)
+    {
+        ++nodeCount1;
+    }
+    
     // if there was an eviction (flag is turned on), then call evict()
     if (needEvict)
     {

@@ -19,9 +19,7 @@ int main()
 
 {
     CuckooHash hashy;
-    
-    hashy.insert("brad", 1000);
-    cout << hashy.search("nick");
+
 
     
 }
