@@ -94,9 +94,15 @@ void CuckooHash::insert(const string &key, const int value)
     // if not, call rehash()
     if ((nodeCount1 >= tableSize / 2) || (nodeCount2 >= tableSize / 2))
     {
-        //rehash();
+        if (rehash() == 1)
+        {
+            return;
+        }
 
-        // make sure rehash() updates both tableSize and tableSizeCounter
+        // need to recompute the hash value 1 with new tableSize 
+        homePosition = hash1(key); 
+
+        std::cout << "\nrehash was called. " << "tableSize: " << tableSize << ". PRIME index: " << tableSizeCounter << std::endl;
     }
     
     // try to insert in the home position
@@ -362,4 +368,68 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
     }
 
     return;
+}
+
+/* rehash() 
+*
+*  uses the next value in PRIME_LIST (approximately double the size), to allocate new tables.
+*  All records in the old tables are then rehashed to the new tables using the new table size.
+*  If the user has stored enough records such that there is no next value in PRIME_LIST, the demo
+*  has reached it's conclusion and no new records may be inserted.
+*/
+int CuckooHash::rehash() 
+{
+    if (tableSizeCounter == LENGTH_PRIME - 1)
+    {
+        std::cerr << "You've reached the maximum size for this hash table demo.\n";
+
+        // return 1 to signal insert() to return without attempting to insert
+        return 1;
+    }
+
+    // increment the index to use for selecting a prime number from PRIME_LIST
+    ++tableSizeCounter;    
+    // update tableSize with the new PRIME_LIST index  
+    tableSize = PRIME_LIST[tableSizeCounter];
+
+    // allocate new (temporary tables with increased size)
+    HashNode* table1Temp = new HashNode[tableSize];
+    HashNode* table2Temp = new HashNode[tableSize];
+
+    // loop through the elements for table1 and table2, and rehash all intialized nodes to the temporary tables
+    // use the old tableSize for the loop condition
+    int hash1Index = -1;
+    int hash2Index = -1;
+    for (int i = 0; i < PRIME_LIST[tableSizeCounter - 1]; ++i)
+    {
+        if (!table1[i].name.empty())
+        {
+            hash1Index = hash1(table1[i].name);
+
+            table1Temp[hash1Index].name = table1[i].name;
+            table1Temp[hash1Index].birthYear = table1[i].birthYear;
+        }
+        if (!table2[i].name.empty())
+        {
+            hash2Index = hash2(table2[i].name);
+
+            table2Temp[hash2Index].name = table2[i].name;
+            table2Temp[hash2Index].birthYear = table2[i].birthYear;
+        }
+    }
+
+    // delete the old arrays
+    delete[] table1;
+    delete[] table2;
+
+    // point old array pointers to new arrays
+    table1 = table1Temp;
+    table2 = table2Temp;
+
+    // make temp pointers point to null
+    table1Temp = nullptr;
+    table2Temp = nullptr;
+
+    // 0 for good reallocation
+    return 0;
 }

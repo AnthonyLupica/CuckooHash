@@ -20,8 +20,11 @@
 
 using std::string;
 
+// the defined size declarator for PRIME_LIST (increase or decrease when adding or removing elements from PRIME_LIST)
+const int LENGTH_PRIME = 13; 
+
 // list of prime numbers beginning at 11 for table sizes. Double and round up to nearest prime
-const int PRIME_LIST[] = { 11, 23, 47, 97, 197, 397, 797, 1597, 3203, 6421, 12853, 25717, 51481 };
+const int PRIME_LIST[LENGTH_PRIME] = { 11, 23, 47, 97, 197, 397, 797, 1597, 3203, 6421, 12853, 25717, 51481 };
 
 class CuckooHash
 {
@@ -45,6 +48,7 @@ class CuckooHash
         bool isFourDigit(const int value);                                   // predicate for veryifing a valid birth year 
         void evictToOne(const string &key, const int value, int staticPass); // finds evicted records a new home in table 1 
         void evictToTwo(const string &key, const int value, int staticPass); // finds evicted records a new home in table 2
+        int rehash();                                                        // rehash method to increase the tableSize;
 
     public: 
 
@@ -54,6 +58,8 @@ class CuckooHash
 
         int search(const string &key);                   // search method
         void insert(const string &key, const int value); // insert method 
+        int size() const                                 // getter for the number of records
+        { return nodeCount1 + nodeCount2; }                              
 
         /*-- Getters for testing purposes, remove all after testing--*/
 

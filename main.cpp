@@ -22,10 +22,14 @@ int main()
     hashy.insert("Robert Lupica", 1964);
     hashy.insert("Captain America", 2012);
     hashy.insert("Hulk", 3000);
-    hashy.insert("I hope this works", 1200);
-    hashy.insert("I hope", 1957);
-    hashy.insert("sup", 5000);
-    hashy.insert("Call evict", 8000);
+    hashy.insert("Katniss", 3050);
+    hashy.insert("Peta", 3051);
+    hashy.insert("Rehash", 3052);
+    hashy.insert("Rehash now?", 3053);
+    hashy.insert("The Fuck?", 3054);
+    hashy.insert("The Fuck?", 3054);
+    hashy.insert("Will Smith", 3055);
+   
 
     cout << "\n" << hashy.search("Anthony Lupica") << " ";
     cout << hashy.search("George Lopez") << " ";
@@ -33,11 +37,18 @@ int main()
     cout << hashy.search("Robert Lupica") << " ";
     cout << hashy.search("Captain America") << " ";
     cout << hashy.search("Hulk") << " ";
-    cout << hashy.search("I hope this works") << " ";
-    cout << hashy.search("I hope") << " ";
+    cout << hashy.search("Katniss") << " ";
+    cout << hashy.search("Peta") << " ";
+    cout << hashy.search("Rehash") << " ";
+    cout << hashy.search("Rehash now?") << " ";
+    cout << hashy.search("The Fuck?") << " ";
+    cout << hashy.search("Will Smith") << " ";
+
+    
+  
 
 
-    cout << hashy.getNodes1() << " || " << hashy.getNodes2();
+    cout << "    " << hashy.getNodes1() << " || " << hashy.getNodes2();
   
     return 0;
 }
