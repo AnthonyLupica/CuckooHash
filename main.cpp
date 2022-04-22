@@ -20,11 +20,22 @@ int main()
     hashy.insert("George Lopez", 1900);
     hashy.insert("Kim Possible", 1999);
     hashy.insert("Robert Lupica", 1964);
+    hashy.insert("Captain America", 2012);
+    hashy.insert("Hulk", 3000);
+    hashy.insert("I hope this works", 1200);
+    hashy.insert("I hope", 1957);
 
-    cout << hashy.search("Anthony Lupica") << " ";
+    cout << "\n" << hashy.search("Anthony Lupica") << " ";
     cout << hashy.search("George Lopez") << " ";
     cout << hashy.search("Kim Possible") << " ";
     cout << hashy.search("Robert Lupica") << " ";
+    cout << hashy.search("Captain America") << " ";
+    cout << hashy.search("Hulk") << " ";
+    cout << hashy.search("I hope this works") << " ";
+    cout << hashy.search("I hope") << " ";
+
+
+    cout << hashy.getNodes1() << " || " << hashy.getNodes2();
   
     return 0;
 }

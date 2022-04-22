@@ -9,6 +9,8 @@
     (and non-famous people alike) can be used as the key to quickly find their birth year.
     Ex.] std::cout << CuckooHash.search("Brad Pitt");
          --> "1963"
+    
+    The user may also wish use some other logical assiocation of names and years.
 */
 
 #ifndef CUCKOOHASH_HPP_INCLUDED
@@ -41,8 +43,8 @@ class CuckooHash
         int hash1(const string &key);                                        // hash function for table1
         int hash2(const string &key);                                        // hash function for table2
         bool isFourDigit(const int value);                                   // predicate for veryifing a valid birth year 
-        void evictToOne(const string &key, const int value, int staticPass); // evicts displaced records and finds them a new home in table 1 
-        void evictToTwo(const string &key, const int value, int staticPass); // evicts displaced records and finds them a new home in table 2
+        void evictToOne(const string &key, const int value, int staticPass); // finds evicted records a new home in table 1 
+        void evictToTwo(const string &key, const int value, int staticPass); // finds evicted records a new home in table 2
 
     public: 
 
@@ -52,6 +54,14 @@ class CuckooHash
 
         int search(const string &key);                   // search method
         void insert(const string &key, const int value); // insert method 
+
+        /*-- Getters for testing purposes, remove all after testing--*/
+
+        int getNodes1() const 
+        { return nodeCount1; }
+
+        int getNodes2() const 
+        { return nodeCount2; }
 };
 
 #endif // CUCKOOHASH_HPP_INCLUDED
