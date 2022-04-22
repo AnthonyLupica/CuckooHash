@@ -377,7 +377,7 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
 *  If the user has stored enough records such that there is no next value in PRIME_LIST, the demo
 *  has reached it's conclusion and no new records may be inserted.
 */
-int CuckooHash::rehash() 
+bool CuckooHash::rehash() 
 {
     if (tableSizeCounter == LENGTH_PRIME - 1)
     {
@@ -431,5 +431,32 @@ int CuckooHash::rehash()
     table2Temp = nullptr;
 
     // 0 for good reallocation
+    return 0;
+}
+
+/* contains()
+*
+*  returns true if the key is found in the table, and false otherwise
+*/
+bool CuckooHash::contains(const string &key)
+{
+    int homePosition = hash1(key); // position found for the first table 
+
+    // if the key at that index matches the key argument, return true
+    if (table1[homePosition].name == key)
+    {
+        return 1;
+    }
+    else
+    {
+        int evictionPosition = hash2(key); // position found for the second table
+        // if the key at that index matches the key argument, return true
+        if (table2[evictionPosition].name == key)
+        {
+            return 1;
+        }
+    }
+
+    // return false if the element was not found
     return 0;
 }
