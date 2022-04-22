@@ -270,7 +270,7 @@ void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
     
     // only increment nodeCount1 if the new key didn't evict a record
     // (in which case we would be adding a record to table1 but also removing a record)
-    if (needEvict = 0)
+    if (needEvict == 0)
     {
         ++nodeCount1;
 
@@ -324,7 +324,7 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
     
     // only increment nodeCount1 if the new key didn't evict a record
     // (in which case we would be adding a record to table1 but also removing a record)
-    if (needEvict = 0)
+    if (needEvict == 0)
     {
         ++nodeCount2;
 
