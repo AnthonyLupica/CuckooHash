@@ -13,12 +13,13 @@
 
 #include "CuckooHash.hpp"
 #include <iostream>
+#include <cmath> 
 
 /* Default Constructor 
 *
 *  Initialize tableSize to the first value in PRIME_LIST. 
 *  When a rehash is necessary, the tableSize
-*  will use the next value (doubled and rounded up to the nearest
+*  will use the next value in PRIME_LIST (doubled and rounded up to the nearest
 *  prime number).
 */
 CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCount1(0), nodeCount2(0)
@@ -32,8 +33,8 @@ CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCo
 *
 *  Initialize tableSize to the first value in PRIME_LIST. 
 *  When a rehash is necessary, the tableSize
-*  will use the next value (doubled and rounded up to the nearest
-*  prime number). Take in an intital key and value.
+*  will use the next value in PRIME_LIST (doubled and rounded up to the nearest
+*  prime number). Take in an intital key and value to pass to insert().
 */
 CuckooHash::CuckooHash(const string &key, const int value) : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCount1(0), nodeCount2(0)
 {
@@ -58,11 +59,14 @@ CuckooHash::~CuckooHash()
 
 /* insert() 
 *
-*  
+*  If the given key is unique, and the given value is a four digit number, the record 
+*  will be inserted at the home slot computed by the hash function for table 1. If either table
+*  is at or over half full, the tableSize is first rehashed. If there was already an occupant in the home
+*  slot, that occupant is evicted and passed to evictToTwo() for reseating.  
 */
 void CuckooHash::insert(const string &key, const int value)
 {
-    // compute both hash values in order to check if this key is a duplicate
+    // compute both hash values for checking if this key is a duplicate
     int homePosition = hash1(key);     // position found for the first table 
     int evictionPosition = hash2(key); // position found for the second table
 
@@ -78,7 +82,7 @@ void CuckooHash::insert(const string &key, const int value)
     // CONDITION TWO: value must be four digits
     if (!isFourDigit(value)) 
     {
-        std::cerr << "The birth year must be in the form of four digits\n";
+        std::cerr << "The birth year must be in four-digit form\n";
 
         return;
     }
@@ -110,19 +114,17 @@ void CuckooHash::insert(const string &key, const int value)
     table1[homePosition].birthYear = value;
     
     // only increment nodeCount1 if the new key didn't evict a record
-    // (in which case we would be adding a record to table1 but also removing a record)
-    if (needEvict = 0)
+    // (in which case we would be adding a record to table1 but also removing a record from table1)
+    if (needEvict == 0)
     {
         ++nodeCount1;
     }
     
-    // if there was an eviction (flag is turned on), then call evict()
+    // if there was an eviction (flag is turned on), then call evictToTwo()
     if (needEvict)
     {
-        // call evict
-        // evict(tempKey, tempValue);
-
-        // it will be evict()'s responsibility to update nodeCount1 and nodeCount2
+        // pass in an initial value of 0 for the evictCount
+        evictToTwo(tempKey, tempValue, 0);
     }
 
     return;
@@ -225,5 +227,113 @@ bool CuckooHash::isFourDigit(const int value)
     else
     {
         return 0;
+    }
+}
+
+/* evictToOne() 
+*
+*  Reseats the key - value parameters in table 1. If there is a previous occupant.
+*  Call evictToTwo() with that occupant. The result is a "ping-pong" effect back and forth 
+*  until no eviction is necessary.
+*/
+void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
+{
+    // when evictCount is log n, we rehash
+    static int evictCount; 
+    evictCount = staticPass;
+    ++evictCount;
+
+    // if evictCount is greater than or equal to log(N), rehash
+    if (evictCount >= log2(nodeCount1 + nodeCount2))
+    {
+        // rehash()
+    }
+
+    // try to insert in table1
+    // compute the hash value for table 1
+    int hashVal1 = hash1(key); 
+    
+    // save a temporary copy of the data already there, if it exists
+    string tempKey;
+    int tempValue = 0;
+    bool needEvict = 0;
+    if (!table1[hashVal1].name.empty())
+    {
+        tempKey = table1[hashVal1].name;
+        tempValue = table1[hashVal1].birthYear;
+        needEvict = 1;
+    }
+
+    // new data replaces the old occupant as the new owner of the index
+    table1[hashVal1].name = key;
+    table1[hashVal1].birthYear = value;
+    
+    // only increment nodeCount1 if the new key didn't evict a record
+    // (in which case we would be adding a record to table1 but also removing a record)
+    if (needEvict = 0)
+    {
+        ++nodeCount1;
+
+        return;
+    }
+    
+    // if there was an eviction (flag is turned on), then call evictToOne()
+    if (needEvict)
+    {
+        evictToTwo(tempKey, tempValue, evictCount);
+    }
+}
+
+/* evictToTwo() 
+*
+*  Reseats the key - value parameters in table 2. If there is a previous occupant.
+*  Call evictToOne() with that occupant. The result is a "ping-pong" effect back and forth 
+*  until no eviction is necessary.
+*/
+void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
+{
+    // when evictCount is log n, we rehash
+    static int evictCount; 
+    evictCount = staticPass;
+    ++evictCount;
+
+    // if evictCount is greater than or equal to log(N), rehash
+    if (evictCount >= log2(nodeCount1 + nodeCount2))
+    {
+        // rehash()
+    }
+
+    // try to insert in table2
+    // compute the hash value for table 2
+    int hashVal2 = hash2(key); 
+    
+    // save a temporary copy of the data already there, if it exists
+    string tempKey;
+    int tempValue = 0;
+    bool needEvict = 0;
+    if (!table2[hashVal2].name.empty())
+    {
+        tempKey = table2[hashVal2].name;
+        tempValue = table2[hashVal2].birthYear;
+        needEvict = 1;
+    }
+
+    // new data replaces the old occupant as the new owner of the index
+    table2[hashVal2].name = key;
+    table2[hashVal2].birthYear = value;
+    
+    // only increment nodeCount1 if the new key didn't evict a record
+    // (in which case we would be adding a record to table1 but also removing a record)
+    if (needEvict = 0)
+    {
+        ++nodeCount2;
+
+        return;
+    }
+    
+    // if there was an eviction (flag is turned on), then call evictToOne()
+    if (needEvict)
+    {
+        evictToOne(tempKey, tempValue, evictCount);
     }
 }

@@ -38,9 +38,11 @@ class CuckooHash
         int nodeCount1;          // keeps track of the number of initialized nodes in table1
         int nodeCount2;          // keeps track of the number of initialized nodes in table2
 
-        int hash1(const string &key);      // hash function for table1
-        int hash2(const string &key);      // hash function for table2
-        bool isFourDigit(const int value); // predicate for veryifing a valid birth year         
+        int hash1(const string &key);                                        // hash function for table1
+        int hash2(const string &key);                                        // hash function for table2
+        bool isFourDigit(const int value);                                   // predicate for veryifing a valid birth year 
+        void evictToOne(const string &key, const int value, int staticPass); // evicts displaced records and finds them a new home in table 1 
+        void evictToTwo(const string &key, const int value, int staticPass); // evicts displaced records and finds them a new home in table 2
 
     public: 
 

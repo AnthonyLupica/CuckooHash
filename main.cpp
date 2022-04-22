@@ -16,6 +16,15 @@ using std::cout;
 
 int main()
 {
+    CuckooHash hashy("Anthony Lupica", 2000);
+    hashy.insert("George Lopez", 1900);
+    hashy.insert("Kim Possible", 1999);
+    hashy.insert("Robert Lupica", 1964);
+
+    cout << hashy.search("Anthony Lupica") << " ";
+    cout << hashy.search("George Lopez") << " ";
+    cout << hashy.search("Kim Possible") << " ";
+    cout << hashy.search("Robert Lupica") << " ";
   
     return 0;
 }
