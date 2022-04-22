@@ -506,7 +506,8 @@ void CuckooHash::remove(const string &key)
 /* position()
 *
 *  helper for delete(). Implements a variation of search() and contains() which returns the index of the record,
-*  if it is found, and -1 otherwise. 
+*  if it is found, and -1 otherwise. Also updates a reference parameter "whichTable" to 1 or 2, which tells delete()
+*  which table to use the returned index for.
 */
 int CuckooHash::position(const string &key, int &whichTable)
 {
