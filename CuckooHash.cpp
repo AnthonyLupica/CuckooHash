@@ -26,7 +26,6 @@
 */
 CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCount1(0), nodeCount2(0)
 {
-    std::cout << "\nDefault constructor was called\n\n";
     table1 = new HashNode[tableSize];
     table2 = new HashNode[tableSize];
 }
@@ -40,7 +39,6 @@ CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCo
 */
 CuckooHash::CuckooHash(const string &key, const int value) : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCount1(0), nodeCount2(0)
 {
-    std::cout << "\nkey-value constructor was called\n\n";
     table1 = new HashNode[tableSize];
     table2 = new HashNode[tableSize];
 
@@ -54,7 +52,6 @@ CuckooHash::CuckooHash(const string &key, const int value) : tableSize(PRIME_LIS
 */
 CuckooHash::~CuckooHash()
 {
-    std::cout << "\ndestructor was called\n\n";
     delete[] table1;
     delete[] table2;
 }
@@ -134,7 +131,6 @@ void CuckooHash::insert(const string &key, const int value)
     else 
     {
         // pass in an initial value of 0 for the evictCount
-        std::cout << "evictToTwo was called from insert\n";
         evictToTwo(tempKey, tempValue, 0);
     }
 
