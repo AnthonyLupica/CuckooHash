@@ -19,9 +19,9 @@
 
 /* Default Constructor 
 *
-*  Initialize tableSize to the first value in PRIME_LIST. 
-*  When a rehash is necessary, the tableSize
-*  will use the next value in PRIME_LIST (double previous tableSize and round up to the nearest
+*  Initialize table size to the first value in PRIME_LIST. 
+*  When a rehash is necessary, the table size
+*  will use the next value in PRIME_LIST (double previous table size and round up to the nearest
 *  prime number).
 */
 CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCount1(0), nodeCount2(0)
@@ -33,9 +33,9 @@ CuckooHash::CuckooHash() : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCo
 
 /* key-value Constructor 
 *
-*  Initialize tableSize to the first value in PRIME_LIST. 
-*  When a rehash is necessary, the tableSize
-*  will use the next value in PRIME_LIST (double previous tableSize and round up to the nearest
+*  Initialize table size to the first value in PRIME_LIST. 
+*  When a rehash is necessary, the table size
+*  will use the next value in PRIME_LIST (double previous table size and round up to the nearest
 *  prime number). Take in an intital key and value to pass to insert().
 */
 CuckooHash::CuckooHash(const string &key, const int value) : tableSize(PRIME_LIST[0]), tableSizeCounter(0), nodeCount1(0), nodeCount2(0)
@@ -65,7 +65,7 @@ CuckooHash::~CuckooHash()
 *  will be inserted at the home slot computed by the hash function for table 1. If either table
 *  is at or over half full, the tableSize is first rehashed. If there was already an occupant in the home
 *  slot, that occupant is evicted and passed to evictToTwo() for reseating. In the event of an eviction cycle, 
-*  specifically determined by log N evictions (where N is the total node count among both tables), rehash is called. 
+*  specifically determined by log N evictions (where N is the table size), rehash is called. 
 */
 void CuckooHash::insert(const string &key, const int value)
 {
@@ -128,14 +128,17 @@ void CuckooHash::insert(const string &key, const int value)
     else 
     {
         // pass in an initial value of 0 for the evictCount
+        std::cout << "evictToTwo was called from insert\n";
         evictToTwo(tempKey, tempValue, 0);
     }
+
+    return;
 }
 
 /* search() 
 *
-*  looks first in table1 to see if the key can be found at its hash location.
-*  If not present, looks instead in table2 for the record. If found in either table,
+*  looks first in table 1 to see if the key can be found at its hash location.
+*  If not present, looks instead in table 2 for the record. If found in either table,
 *  the birth year is returned. If the record is not found at either hash location, -1 is returned.
 */
 int CuckooHash::search(const string &key)
@@ -241,15 +244,24 @@ bool CuckooHash::isFourDigit(const int value)
 void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
 {
     std::cout << "evictToOne was called\n";
+
     // when evictCount is log n, we rehash
     static int evictCount; 
     evictCount = staticPass;
     ++evictCount;
 
+    std::cout << "evictCount: " << evictCount << "\n\n";
+
     // if evictCount is greater than or equal to log(N), rehash
-    if (evictCount >= log2(nodeCount1 + nodeCount2))
+    if (evictCount >= log2(tableSize))
     {
         // rehash()
+
+        std::cout << "rehash would have been called in table One\n";
+
+
+        // reset evictCount to 0 after rehash
+        evictCount = 0;
     }
 
     // try to insert in table1
@@ -272,7 +284,7 @@ void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
     table1[hashVal1].birthYear = value;
     
     // only increment nodeCount1 if the new key didn't evict a record
-    // (in which case we would be adding a record to table1 but also removing a record)
+    // (in which case we would be adding a record to table1 but also removing a record from table1)
     if (!needEvict)
     {
         ++nodeCount1;
@@ -284,6 +296,8 @@ void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
     {
         evictToTwo(tempKey, tempValue, evictCount);
     }
+
+    return;
 }
 
 /* evictToTwo() 
@@ -301,12 +315,17 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
     evictCount = staticPass;
     ++evictCount;
 
-    std::cout << "evictCount: " << evictCount << std::endl;
+    std::cout << "evictCount: " << evictCount << "\n\n";
 
     // if evictCount is greater than or equal to log(N), rehash
-    if (evictCount >= log2(nodeCount1 + nodeCount2))
+    if (evictCount >= log2(tableSize))
     {
         // rehash()
+
+        std::cout << "rehash would have been called in table two\n";
+
+        // reset evictCount to 0 after rehash
+        evictCount = 0;
     }
 
     // try to insert in table2
@@ -328,8 +347,8 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
     table2[hashVal2].name = key;
     table2[hashVal2].birthYear = value;
     
-    // only increment nodeCount1 if the new key didn't evict a record
-    // (in which case we would be adding a record to table1 but also removing a record)
+    // only increment nodeCount2 if the new key didn't evict a record
+    // (in which case we would be adding a record to table2 but also removing a record from table2)
     if (!needEvict)
     {
         ++nodeCount2;
@@ -341,4 +360,6 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
     {
         evictToOne(tempKey, tempValue, evictCount);
     }
+
+    return;
 }

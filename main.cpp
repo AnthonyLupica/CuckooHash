@@ -24,6 +24,8 @@ int main()
     hashy.insert("Hulk", 3000);
     hashy.insert("I hope this works", 1200);
     hashy.insert("I hope", 1957);
+    hashy.insert("sup", 5000);
+    hashy.insert("Call evict", 8000);
 
     cout << "\n" << hashy.search("Anthony Lupica") << " ";
     cout << hashy.search("George Lopez") << " ";
