@@ -466,7 +466,8 @@ bool CuckooHash::contains(const string &key)
 
 /* remove()
 *
-*  deletes the record if it exists in either table, and otherwise does nothing.
+*  deletes the record if it exists in either table, and otherwise does nothing. This version 
+*  of a cuckoo delete does not promote a record from table 2 to table 1 when a record is deleted from table 1.
 */
 void CuckooHash::remove(const string &key)
 {

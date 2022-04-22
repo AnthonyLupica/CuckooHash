@@ -49,7 +49,7 @@ class CuckooHash
         void evictToOne(const string &key, const int value, int staticPass); // finds evicted records a new home in table 1 
         void evictToTwo(const string &key, const int value, int staticPass); // finds evicted records a new home in table 2
         bool rehash();                                                       // rehash method to increase the tableSize;
-        int position(const string &key, int &whichTable);                    // helper for delete(). rReturns the index of a found record
+        int position(const string &key, int &whichTable);                    // helper for delete(). Returns the index of a found record
 
     public: 
 
