@@ -155,6 +155,7 @@ int CuckooHash::search(const string &key)
     else
     {
         int evictionPosition = hash2(key); // position found for the second table
+        
         // if the key at that index matches the key argument, return the year
         if (table2[evictionPosition].name == key)
         {
@@ -257,10 +258,12 @@ void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
     // if evictCount is greater than or equal to log(N), rehash
     if (evictCount >= log2(tableSize))
     {
-        // rehash()
+        if (rehash() == 1)
+        {
+            return;
+        } 
 
-        std::cout << "rehash would have been called in table One\n";
-
+        std::cout << "\nrehash was called in evictToOne(). " << "tableSize: " << tableSize << ". PRIME index: " << tableSizeCounter << std::endl;
 
         // reset evictCount to 0 after rehash
         evictCount = 0;
@@ -322,9 +325,12 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
     // if evictCount is greater than or equal to log(N), rehash
     if (evictCount >= log2(tableSize))
     {
-        // rehash()
+        if (rehash() == 1)
+        {
+            return;
+        } 
 
-        std::cout << "rehash would have been called in table two\n";
+        std::cout << "\nrehash was called in evictToTwo(). " << "tableSize: " << tableSize << ". PRIME index: " << tableSizeCounter << std::endl;
 
         // reset evictCount to 0 after rehash
         evictCount = 0;
@@ -446,6 +452,7 @@ bool CuckooHash::contains(const string &key)
     else
     {
         int evictionPosition = hash2(key); // position found for the second table
+        
         // if the key at that index matches the key argument, return true
         if (table2[evictionPosition].name == key)
         {
@@ -455,4 +462,74 @@ bool CuckooHash::contains(const string &key)
 
     // return false if the element was not found
     return 0;
+}
+
+/* remove()
+*
+*  deletes the record if it exists in either table, and otherwise does nothing.
+*/
+void CuckooHash::remove(const string &key)
+{
+    int whichTable = -1;
+    int index = position(key, whichTable);
+
+    // if the key is in the table
+    if (index != -1)
+    {
+        if (whichTable == 1)
+        {
+            // make name empty so this index operates as an uninitialized node
+            table1[index].name = "";
+
+            // decrement nodeCount1
+            --nodeCount1;
+        }
+        if (whichTable == 2)
+        {
+            // make name empty so this index operates as an uninitialized node
+            table2[index].name = "";
+
+            // decrement nodeCount2
+            --nodeCount2;
+        }
+        
+        return;
+    }
+    else 
+    {
+        std::cerr << "key " << "'" << key << "' " << "does not exist within the table\n";
+
+        return;
+    }
+}
+
+/* position()
+*
+*  helper for delete(). Implements a variation of search() and contains() which returns the index of the record,
+*  if it is found, and -1 otherwise. 
+*/
+int CuckooHash::position(const string &key, int &whichTable)
+{
+    int homePosition = hash1(key); // position found for the first table 
+
+    // if the key at that index matches the key argument, return the index
+    if (table1[homePosition].name == key)
+    {
+        whichTable = 1; // for table 1
+        return homePosition;
+    }
+    else
+    {
+        int evictionPosition = hash2(key); // position found for the second table
+        
+        // if the key at that index matches the key argument, return the index
+        if (table2[evictionPosition].name == key)
+        {
+            whichTable = 2; // for table 2
+            return evictionPosition;
+        }
+    }
+
+    // return -1 to delete() to signal that there is no record to delete
+    return -1;
 }

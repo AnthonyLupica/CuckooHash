@@ -48,7 +48,8 @@ class CuckooHash
         bool isFourDigit(const int value);                                   // predicate for veryifing a valid birth year 
         void evictToOne(const string &key, const int value, int staticPass); // finds evicted records a new home in table 1 
         void evictToTwo(const string &key, const int value, int staticPass); // finds evicted records a new home in table 2
-        bool rehash();                                                        // rehash method to increase the tableSize;
+        bool rehash();                                                       // rehash method to increase the tableSize;
+        int position(const string &key, int &whichTable);                    // helper for delete(). rReturns the index of a found record
 
     public: 
 
@@ -56,8 +57,9 @@ class CuckooHash
         CuckooHash(const string &key, const int value);  // constructor taking an initial key - value 
         ~CuckooHash();                                   // destructor 
 
-        int search(const string &key);                   // search method
         void insert(const string &key, const int value); // insert method 
+        int search(const string &key);                   // search method
+        void remove(const string &key);                  // remove method 
         bool contains(const string &key);                // contains method    
         int size() const                                 // getter for the number of records (in table1 + in table2)
         { return nodeCount1 + nodeCount2; }    
