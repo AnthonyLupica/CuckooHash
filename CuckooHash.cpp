@@ -98,8 +98,6 @@ void CuckooHash::insert(const string &key, const int value)
 
         // need to recompute the hash value 1 with new tableSize 
         homePosition = hash1(key); 
-
-        std::cout << "\nrehash was called. " << "tableSize: " << tableSize << ". PRIME index: " << tableSizeCounter << std::endl;
     }
     
     // try to insert in the home position
@@ -246,14 +244,10 @@ bool CuckooHash::isFourDigit(const int value)
 */
 void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
 {
-    std::cout << "evictToOne was called\n";
-
     // when evictCount is log n, we rehash
     static int evictCount; 
     evictCount = staticPass;
     ++evictCount;
-
-    std::cout << "evictCount: " << evictCount << "\n\n";
 
     // if evictCount is greater than or equal to log(N), rehash
     if (evictCount >= log2(tableSize))
@@ -262,8 +256,6 @@ void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
         {
             return;
         } 
-
-        std::cout << "\nrehash was called in evictToOne(). " << "tableSize: " << tableSize << ". PRIME index: " << tableSizeCounter << std::endl;
 
         // reset evictCount to 0 after rehash
         evictCount = 0;
@@ -313,14 +305,10 @@ void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
 */
 void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
 {
-    std::cout << "EvictToTwo was called\n";
-    
     // when evictCount is log n, we rehash
     static int evictCount; 
     evictCount = staticPass;
     ++evictCount;
-
-    std::cout << "evictCount: " << evictCount << "\n\n";
 
     // if evictCount is greater than or equal to log(N), rehash
     if (evictCount >= log2(tableSize))
@@ -329,8 +317,6 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
         {
             return;
         } 
-
-        std::cout << "\nrehash was called in evictToTwo(). " << "tableSize: " << tableSize << ". PRIME index: " << tableSizeCounter << std::endl;
 
         // reset evictCount to 0 after rehash
         evictCount = 0;

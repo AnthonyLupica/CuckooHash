@@ -27,7 +27,7 @@ int main()
 
     
     
-    cout << "    " << hashy.getNodes1() << " || " << hashy.getNodes2() << "\n";
+    cout << hashy.getNodes1() << " || " << hashy.getNodes2() << "\n";
 
     return 0;
 }
