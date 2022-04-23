@@ -64,7 +64,7 @@ class CuckooHash
         int size() const                                 // getter for the number of records (in table1 + in table2)
         { return nodeCount1 + nodeCount2; }    
                            
-        /*-- Getters for testing purposes, remove all after testing--*/
+        /*-- Getters for testing purposes, remove all after testing --*/
 
         int getNodes1() const 
         { return nodeCount1; }
