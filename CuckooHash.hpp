@@ -3,14 +3,16 @@
     Project Hash: Cuckoo Hashing
     Author: Anthony Lupica <arl127@uakron.edu> 2022
 
-    Header file for a hash table class using the cuckoo hashing technique
+    Header file for a hash table class using the cuckoo hashing technique.
 
-    The hash table implements a celebrity birth-year lookup. The name of a celebrity
-    (and non-famous people alike) can be used as the key to quickly find their birth year.
-    Ex.] std::cout << CuckooHash.search("Brad Pitt");
-         --> "1963"
+    The hash table implements a name - year lookup. The name of a person 
+    can be used as the key to quickly find an associated year.
     
-    The user may also wish use some other logical assiocation of names and years.
+    Ex.] Birth Year
+    std::cout << CuckooHash.search("Brad Pitt");
+        --> "1963"
+    
+    The user may decide which logical assiocation to use between names and years.
 */
 
 #ifndef CUCKOOHASH_HPP_INCLUDED
@@ -32,8 +34,8 @@ class CuckooHash
        
         struct HashNode 
         {
-            string name;   // key 
-            int birthYear; // value 
+            string name; // key 
+            int year;    // value 
         };
 
         int tableSize;           // table size (will use PRIME_LIST for rehash values)

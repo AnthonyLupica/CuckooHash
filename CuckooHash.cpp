@@ -3,14 +3,16 @@
     Project Hash: Cuckoo Hashing
     Author: Anthony Lupica <arl127@uakron.edu> 2022
 
-    Implementation file for a hash table class using the cuckoo hashing technique
+    Implementation file for a hash table class using the cuckoo hashing technique.
 
-    The hash table implements a celebrity birth-year lookup. The name of a celebrity
-    (and non-famous people alike) can be used as the key to quickly find their birth year.
-    Ex.] std::cout << CuckooHash.search("Brad Pitt");
-         --> "1963"
+    The hash table implements a name - year lookup. The name of a person 
+    can be used as the key to quickly find an associated year.
     
-    The user may also wish use some other logical assiocation of names and years.
+    Ex.] Birth Year
+    std::cout << CuckooHash.search("Brad Pitt");
+        --> "1963"
+    
+    The user may decide which logical assiocation to use between names and years.
 */
 
 #include "CuckooHash.hpp"
@@ -82,7 +84,7 @@ void CuckooHash::insert(const string &key, const int value)
     // CONDITION TWO: value must be four digits
     if (!isFourDigit(value)) 
     {
-        std::cerr << "The birth year must be in four-digit form\n";
+        std::cerr << "The year must be in four-digit form\n";
 
         return;
     }
@@ -109,13 +111,13 @@ void CuckooHash::insert(const string &key, const int value)
     if (!table1[homePosition].name.empty())
     {
         tempKey = table1[homePosition].name;
-        tempValue = table1[homePosition].birthYear;
+        tempValue = table1[homePosition].year;
         needEvict = 1;
     }
 
     // new data replaces the old occupant as the new owner of the index
     table1[homePosition].name = key;
-    table1[homePosition].birthYear = value;
+    table1[homePosition].year = value;
     
     // only increment nodeCount1 if the new key didn't evict a record
     // (in which case we would be adding a record to table1 but also removing a record from table1)
@@ -139,7 +141,7 @@ void CuckooHash::insert(const string &key, const int value)
 *
 *  looks first in table 1 to see if the key can be found at its hash location.
 *  If not present, looks instead in table 2 for the record. If found in either table,
-*  the birth year is returned. If the record is not found at either hash location, -1 is returned.
+*  the year is returned. If the record is not found at either hash location, -1 is returned.
 */
 int CuckooHash::search(const string &key)
 {
@@ -148,7 +150,7 @@ int CuckooHash::search(const string &key)
     // if the key at that index matches the key argument, return the year
     if (table1[homePosition].name == key)
     {
-        return table1[homePosition].birthYear;
+        return table1[homePosition].year;
     }
     else
     {
@@ -157,7 +159,7 @@ int CuckooHash::search(const string &key)
         // if the key at that index matches the key argument, return the year
         if (table2[evictionPosition].name == key)
         {
-            return table2[evictionPosition].birthYear;
+            return table2[evictionPosition].year;
         }
     }
 
@@ -272,13 +274,13 @@ void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
     if (!table1[hashVal1].name.empty())
     {
         tempKey = table1[hashVal1].name;
-        tempValue = table1[hashVal1].birthYear;
+        tempValue = table1[hashVal1].year;
         needEvict = 1;
     }
 
     // new data replaces the old occupant as the new owner of the index
     table1[hashVal1].name = key;
-    table1[hashVal1].birthYear = value;
+    table1[hashVal1].year = value;
     
     // only increment nodeCount1 if the new key didn't evict a record
     // (in which case we would be adding a record to table1 but also removing a record from table1)
@@ -333,13 +335,13 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
     if (!table2[hashVal2].name.empty())
     {
         tempKey = table2[hashVal2].name;
-        tempValue = table2[hashVal2].birthYear;
+        tempValue = table2[hashVal2].year;
         needEvict = 1;
     }
 
     // new data replaces the old occupant as the new owner of the index
     table2[hashVal2].name = key;
-    table2[hashVal2].birthYear = value;
+    table2[hashVal2].year = value;
     
     // only increment nodeCount2 if the new key didn't evict a record
     // (in which case we would be adding a record to table2 but also removing a record from table2)
@@ -395,14 +397,14 @@ bool CuckooHash::rehash()
             hash1Index = hash1(table1[i].name);
 
             table1Temp[hash1Index].name = table1[i].name;
-            table1Temp[hash1Index].birthYear = table1[i].birthYear;
+            table1Temp[hash1Index].year = table1[i].year;
         }
         if (!table2[i].name.empty())
         {
             hash2Index = hash2(table2[i].name);
 
             table2Temp[hash2Index].name = table2[i].name;
-            table2Temp[hash2Index].birthYear = table2[i].birthYear;
+            table2Temp[hash2Index].year = table2[i].year;
         }
     }
 
