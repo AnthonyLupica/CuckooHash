@@ -65,14 +65,6 @@ class CuckooHash
         bool contains(const string &key);                // contains method    
         int size() const                                 // getter for the number of records (in table1 + in table2)
         { return nodeCount1 + nodeCount2; }    
-                           
-        /*-- Getters for testing purposes, remove all after testing --*/
-
-        int getNodes1() const 
-        { return nodeCount1; }
-
-        int getNodes2() const 
-        { return nodeCount2; }
 };
 
 #endif // CUCKOOHASH_HPP_INCLUDED
