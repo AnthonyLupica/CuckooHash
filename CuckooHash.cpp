@@ -5,7 +5,7 @@
 
     Implementation file for a hash table class using the cuckoo hashing technique.
 
-    The hash table implements a name - year lookup. The name of a person 
+    The hash table implements a name - year pair lookup. The name of a person 
     can be used as the key to quickly find an associated year.
     
     Ex.] Birth Year
@@ -240,7 +240,7 @@ bool CuckooHash::isFourDigit(const int value)
 
 /* evictToOne() 
 *
-*  Reseats the key - value parameters in table 1. If there is a previous occupant.
+*  Reseats the key - value pair in table 1. If there is a previous occupant.
 *  Call evictToTwo() with that occupant. The result is a "ping-pong" effect back and forth 
 *  until no eviction is necessary.
 */
@@ -301,7 +301,7 @@ void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
 
 /* evictToTwo() 
 *
-*  Reseats the key - value parameters in table 2. If there is a previous occupant.
+*  Reseats the key - value pair in table 2. If there is a previous occupant.
 *  Call evictToOne() with that occupant. The result is a "ping-pong" effect back and forth 
 *  until no eviction is necessary.
 */

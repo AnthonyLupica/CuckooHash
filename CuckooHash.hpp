@@ -5,7 +5,7 @@
 
     Header file for a hash table class using the cuckoo hashing technique.
 
-    The hash table implements a name - year lookup. The name of a person 
+    The hash table implements a name - year pair lookup. The name of a person 
     can be used as the key to quickly find an associated year.
     
     Ex.] Birth Year
@@ -56,7 +56,7 @@ class CuckooHash
     public: 
 
         CuckooHash();                                    // default constructor
-        CuckooHash(const string &key, const int value);  // constructor taking an initial key - value 
+        CuckooHash(const string &key, const int value);  // constructor taking an initial key - value pair
         ~CuckooHash();                                   // destructor 
 
         void insert(const string &key, const int value); // insert method 
