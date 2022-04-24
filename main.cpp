@@ -13,6 +13,7 @@
 
 #include "CuckooHash.hpp"
 #include "DSProject3-TwoChoice(AndyMee).txt"
+#include "Complexity_Timer.hpp"
 #include <iostream>
 #include <cassert>
 
@@ -66,7 +67,24 @@ int main()
     assert(hashTest.contains("Tom Brady") == 1 && "A record that should exist was not found");
 
     // display the hash table
+    cout << "\n";
     hashTest.display();
+
+    // test inputs in a loop
+    CuckooHash loopTest;
+
+    cout << "\n\ntableSize increases for inserts in a loop: ";
+    for (int i = 33; i < 126; ++i)
+    {
+        char init[] = {i, '\0'};
+        string initString(init);
+        loopTest.insert(initString, 1000);
+        cout << loopTest.capacity() << " ";
+    }
+    cout << "\n\n";
+
+    assert(loopTest.size() == 93 && "An unexpected size was returned");
+    loopTest.display();
     //-------------------------------------------//
 
     return 0;
