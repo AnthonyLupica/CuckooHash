@@ -75,6 +75,8 @@ class CuckooHash
         int size() const                                 // getter for the number of total records (in table1 + in table2)
         { return nodeCount1 + nodeCount2; }   
         void display() const;                            // display the hash table  
+        int capacity() const                             // getter for the internal tableSize of the hash table. This detail would likely be abstracted away under normal circumstances 
+        { return tableSize; }
 };
 
 #endif // CUCKOOHASH_HPP_INCLUDED
