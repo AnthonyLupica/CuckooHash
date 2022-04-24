@@ -38,15 +38,17 @@ class CuckooHash
             int year;    // value 
         };
 
+        // private data members
         int tableSize;               // table size (will use PRIME_LIST for rehash values)
         struct HashNode* table1;     // the primary hash table 
         struct HashNode* table2;     // the secondary "eviction" table 
-        int tableSizeCounter;        // keeps track of which index of PRIME_LIST is in use (for rehash())
-        int nodeCount1;              // keeps track of the number of initialized nodes in table1
-        int nodeCount2;              // keeps track of the number of initialized nodes in table2
         struct HashNode* tempTable1; // tempTable for rehash() 
         struct HashNode* tempTable2; // tempTable for rehash() 
+        int tableSizeCounter;        // keeps track of which index of PRIME_LIST is in use for rehash()
+        int nodeCount1;              // keeps track of the number of initialized nodes in table1
+        int nodeCount2;              // keeps track of the number of initialized nodes in table2
 
+        // private methods
         int hash1(const string &key);                                        // hash function for table1
         int hash2(const string &key);                                        // hash function for table2
         bool isFourDigit(const int value);                                   // predicate for veryifing a valid birth year 
@@ -54,21 +56,23 @@ class CuckooHash
         void evictToTwo(const string &key, const int value, int staticPass); // finds evicted records a new home in table 2
         bool rehash();                                                       // rehash method to increase the tableSize;
         int position(const string &key, int &whichTable);                    // helper for delete(). Returns the index of a found record
-        void insert(const string &key, const int value, int signal);         // overloaded insert() for rehash()
+        void insert(const string &key, const int value, int signal);         // overloaded insert() called by rehash()
         void evictToOne(const string &key, const int value);                 // overloaded evictToOne() for use by overloaded insert()
         void evictToTwo(const string &key, const int value);                 // overloaded evictToTwo() for use by overloaded insert()
 
     public: 
 
+        // ctors and dtor
         CuckooHash();                                    // default constructor
         CuckooHash(const string &key, const int value);  // constructor taking an initial key - value pair
         ~CuckooHash();                                   // destructor 
 
-        void insert(const string &key, const int value); // insert method 
-        int search(const string &key);                   // search method
-        void remove(const string &key);                  // remove method 
-        bool contains(const string &key);                // contains method    
-        int size() const                                 // getter for the number of records (in table1 + in table2)
+        // public methods
+        void insert(const string &key, const int value); // insert into the hash table 
+        int search(const string &key);                   // search the hash table for a record
+        void remove(const string &key);                  // remove a record from the hash table 
+        bool contains(const string &key);                // find if the hash table contains a record    
+        int size() const                                 // getter for the number of total records (in table1 + in table2)
         { return nodeCount1 + nodeCount2; }   
         void display() const;                            // display the hash table  
 };
