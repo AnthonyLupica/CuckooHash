@@ -252,7 +252,7 @@ void CuckooHash::evictToOne(const string &key, const int value, int staticPass)
     ++evictCount;
 
     // if evictCount is greater than or equal to log(N), rehash
-    if (evictCount >= log2(tableSize))
+    if (evictCount >= log2(nodeCount1 + nodeCount2))
     {
         if (rehash() == 1)
         {
@@ -313,7 +313,7 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
     ++evictCount;
 
     // if evictCount is greater than or equal to log(N), rehash
-    if (evictCount >= log2(tableSize))
+    if (evictCount >= log2(nodeCount1 + nodeCount2))
     {
         if (rehash() == 1)
         {
