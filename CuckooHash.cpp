@@ -369,10 +369,6 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
 */
 bool CuckooHash::rehash() 
 {
-    if (contains("Tom Brady"))
-    {
-        std::cout << "He's here";
-    }
     if (tableSizeCounter == LENGTH_PRIME - 1)
     {
         std::cerr << "You've reached the maximum size for this hash table demo.\n";
@@ -392,27 +388,27 @@ bool CuckooHash::rehash()
     tempTable1 = new HashNode[tableSize];
     tempTable2 = new HashNode[tableSize];
 
+    // reset nodeCount1 and nodeCount2 to allow the rehash loop to recompute these values 
+    // (as the distribution of records is very likely to change)
+    nodeCount1 = 0;
+    nodeCount2 = 0;
+
     // loop through the elements for table1 and table2, and rehash all intialized nodes to the temporary tables
-    // use the old tableSize for the loop condition
+    // use the old tableSize for the loop condition. Note: tableSize has already been updated, so any calls to hash1() or hash2()
+    // correctly mod over the increased size. Further, see that the records are "renormalized" by calling insert again, in that 
+    // the first table will be the prime objective for hash slots.
     for (int i = 0; i < tempTableSize; ++i)
     {
         if (!table1[i].name.empty())
         {
             // call overloaded insert()
             // It will hash its argument to tempTable1.
-            // Since we've already updated tableSize, this goes smoothly
             insert(table1[i].name, table1[i].year, 0);
         }
         if (!table2[i].name.empty())
         {
-            if (table2[i].name == "Brad Pitt")
-            {
-                std::cout << "Yep";
-            }
-
             // call overloaded insert()
             // It will hash its argument to tempTable1.
-            // Since we've already updated tableSize, this goes smoothly
             insert(table2[i].name, table2[i].year, 0);
         }
     }
@@ -430,11 +426,6 @@ bool CuckooHash::rehash()
     tempTable2 = nullptr;
 
     // 0 for good reallocation
-
-    if (contains("Tom Brady"))
-    {
-        std::cout << "He's here";
-    }
     return 0;
 }
 
@@ -543,25 +534,27 @@ void CuckooHash::display() const
     for (int i = 0; i < tableSize; ++i) 
     {
         // if the key at this index has a value, display the key and value
-        //if (!table1[i].name.empty())
-        //{
-            std::cout << table1[i].name << " : " << table1[i].year << ", ";
-       // }
-    }
+        if (!table1[i].name.empty())
+        {
+            std::cout << "| " << table1[i].name << " : " << table1[i].year << " |";
+        }
 
-    for (int i = 0; i < tableSize; ++i)
-    {
         // do the same now for table 2
-        //if (!table2[i].name.empty())
-        //{
-            std::cout << table2[i].name << " : " << table2[i].year << ", ";
-        //}
+        if (!table2[i].name.empty())
+        {
+            std::cout << "| " << table2[i].name << " : " << table2[i].year << " |";
+        }
     }
+    // output a new line
+    std::cout << "\n";
 }
 
 /* insert() 
 *
-*  Overloaded for use as a helper for rehash()
+*  Overloaded for use as a helper for rehash().
+*  This version is stripped down, because it does not need to do any validation.
+*  It will also not call rehash() under any circumstances, given that it was just called 
+*  by rehash() itself.
 */
 void CuckooHash::insert(const string &key, const int value, int signal)
 {
@@ -588,8 +581,16 @@ void CuckooHash::insert(const string &key, const int value, int signal)
     tempTable1[homePosition].name = key;
     tempTable1[homePosition].year = value;
     
+    // only increment nodeCount1 if the new key didn't evict a record
+    // (in which case we would be adding a record to tempTable1 but also removing a record from tempTable1)
+    if (!needEvict) 
+    {
+        ++nodeCount1;
+
+        return;
+    }
     // if there was an eviction (flag is turned on), then call evictToTwo()
-    if (needEvict) 
+    else
     {
         evictToTwo(tempKey, tempValue);
     }
@@ -599,41 +600,42 @@ void CuckooHash::insert(const string &key, const int value, int signal)
 
 /* evictToOne() 
 *
-*  overloaded evictToOne() for rehash()
+*  Overloaded evictToOne() for use by overloaded insert().
+*  This version does not check for an eviction cycle, and will not call rehash()
 */
 void CuckooHash::evictToOne(const string &key, const int value)
 {
     // try to insert in tempTable1
     // compute the hash value for tempTable1
-    int hashVal2 = hash2(key); 
+    int hashVal1 = hash1(key); 
     
     // save a temporary copy of the data already there, if it exists
     string tempKey;
     int tempValue = 0;
     bool needEvict = 0;
-    if (!tempTable1[hashVal2].name.empty())
+    if (!tempTable1[hashVal1].name.empty())
     {
-        tempKey = tempTable1[hashVal2].name;
-        tempValue = tempTable1[hashVal2].year;
+        tempKey = tempTable1[hashVal1].name;
+        tempValue = tempTable1[hashVal1].year;
         needEvict = 1;
     }
 
     // new data replaces the old occupant as the new owner of the index
-    tempTable1[hashVal2].name = key;
-    tempTable1[hashVal2].year = value;
+    tempTable1[hashVal1].name = key;
+    tempTable1[hashVal1].year = value;
     
-    // only increment nodeCount2 if the new key didn't evict a record
+    // only increment nodeCount1 if the new key didn't evict a record
     // (in which case we would be adding a record to tempTable1 but also removing a record from tempTable1)
     if (!needEvict)
     {
-        ++nodeCount2;
+        ++nodeCount1;
 
         return;
     }
-    // if there was an eviction (flag is turned on), then call evictToOne()
+    // if there was an eviction (flag is turned on), then call evictToTwo()
     else 
     {
-        evictToOne(tempKey, tempValue);
+        evictToTwo(tempKey, tempValue);
     }
 
     return;
@@ -641,7 +643,8 @@ void CuckooHash::evictToOne(const string &key, const int value)
         
 /* evictToTwo() 
 *
-*  overloaded evictToTwo() for rehash()
+*  Overloaded evictToTwo() for use by overloaded insert().
+*  This version does not check for an eviction cycle, and will not call rehash()
 */
 void CuckooHash::evictToTwo(const string &key, const int value)
 {
@@ -664,8 +667,16 @@ void CuckooHash::evictToTwo(const string &key, const int value)
     tempTable2[hashVal2].name = key;
     tempTable2[hashVal2].year = value;
     
+    // only increment nodeCount2 if the new key didn't evict a record
+    // (in which case we would be adding a record to tempTable2 but also removing a record from tempTable2)
+    if (!needEvict)
+    {
+        ++nodeCount2;
+
+        return;
+    }
     // if there was an eviction (flag is turned on), then call evictToOne()
-    if (needEvict)
+    else 
     {
         evictToOne(tempKey, tempValue);
     }

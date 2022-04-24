@@ -55,8 +55,8 @@ class CuckooHash
         bool rehash();                                                       // rehash method to increase the tableSize;
         int position(const string &key, int &whichTable);                    // helper for delete(). Returns the index of a found record
         void insert(const string &key, const int value, int signal);         // overloaded insert() for rehash()
-        void evictToOne(const string &key, const int value);                 // overloaded evictToOne() for rehash()
-        void evictToTwo(const string &key, const int value);                 // overloaded evictToTwo() for rehash()
+        void evictToOne(const string &key, const int value);                 // overloaded evictToOne() for use by overloaded insert()
+        void evictToTwo(const string &key, const int value);                 // overloaded evictToTwo() for use by overloaded insert()
 
     public: 
 
