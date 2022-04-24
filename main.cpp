@@ -20,8 +20,7 @@ using std::cout;
 
 int main()
 {
-    //-- Testing Section For Correctness --//
-
+    //----- Testing Section For Correctness -----//
     // create a hash table object, call it hashTest, and initialize with a name and birth year
     CuckooHash hashTest("Brad Pitt", 1963);
     
@@ -40,7 +39,6 @@ int main()
     assert(hashTest.search("Tom Brady") == 1977 && "An unexpected birth year was found");
     assert(hashTest.search("Betty White") == 1922 && "An unexpected birth year was found");
     
-    assert(hashTest.contains("Tom Brady") == 1);
     // call size() for the number of records in the table and verify with an assert 
     assert(hashTest.size() == 6 && "An unexpected size was returned");
 
@@ -54,13 +52,9 @@ int main()
     // verify that the non duplicate keys rule is supported
     hashTest.insert("Beyonce", 1981);
 
-    assert(hashTest.contains("Tom Brady") == 1);
-    assert(hashTest.search("Tom Brady") == 1977 && "An unexpected birth year was found");
-
-    // delete a record, test search on that record, verify that size updates, reinsert the same record, and test search again
+    // delete a record, test search on that record, verify that size updates, reinsert the same record, test search and size again
     hashTest.remove("Beyonce");
     assert(hashTest.search("Beyonce") == -1 && "An unexpected birth year was found");
-    assert(hashTest.contains("Beyonce") == 0 && "Found a record that should not exist");
     assert(hashTest.size() == 7 && "An unexpected size was returned");
     hashTest.insert("Beyonce", 1981);
     assert(hashTest.search("Beyonce") == 1981 && "An unexpected birth year was found");
@@ -69,13 +63,11 @@ int main()
     // test contains()
     assert(hashTest.contains("LeBron james") == 0 && "Found a record that should not exist");
     assert(hashTest.contains("Natalie Portman") == 1 && "A record that should exist was not found");
-    //assert(hashTest.contains("Tom Brady") == 1);
+    assert(hashTest.contains("Tom Brady") == 1 && "A record that should exist was not found");
 
-    
-
+    // display the hash table
     hashTest.display();
-
-    //-------------------------------------//
+    //-------------------------------------------//
 
     return 0;
 }
