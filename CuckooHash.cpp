@@ -369,6 +369,10 @@ void CuckooHash::evictToTwo(const string &key, const int value, int staticPass)
 */
 bool CuckooHash::rehash() 
 {
+    if (contains("Tom Brady"))
+    {
+        std::cout << "He's here";
+    }
     if (tableSizeCounter == LENGTH_PRIME - 1)
     {
         std::cerr << "You've reached the maximum size for this hash table demo.\n";
@@ -379,32 +383,37 @@ bool CuckooHash::rehash()
 
     // increment the index to use for selecting a prime number from PRIME_LIST
     ++tableSizeCounter;    
-    // update tableSize with the new PRIME_LIST index  
+    // store tempTableSize as a copy of tableSize  
+    int tempTableSize = tableSize;
+    // update tableSize using new PRIME_LIST index
     tableSize = PRIME_LIST[tableSizeCounter];
 
     // allocate new (temporary tables with increased size)
-    HashNode* table1Temp = new HashNode[tableSize];
-    HashNode* table2Temp = new HashNode[tableSize];
+    tempTable1 = new HashNode[tableSize];
+    tempTable2 = new HashNode[tableSize];
 
     // loop through the elements for table1 and table2, and rehash all intialized nodes to the temporary tables
     // use the old tableSize for the loop condition
-    int hash1Index = -1;
-    int hash2Index = -1;
-    for (int i = 0; i < PRIME_LIST[tableSizeCounter - 1]; ++i)
+    for (int i = 0; i < tempTableSize; ++i)
     {
         if (!table1[i].name.empty())
         {
-            hash1Index = hash1(table1[i].name);
-
-            table1Temp[hash1Index].name = table1[i].name;
-            table1Temp[hash1Index].year = table1[i].year;
+            // call overloaded insert()
+            // It will hash its argument to tempTable1.
+            // Since we've already updated tableSize, this goes smoothly
+            insert(table1[i].name, table1[i].year, 0);
         }
         if (!table2[i].name.empty())
         {
-            hash2Index = hash2(table2[i].name);
+            if (table2[i].name == "Brad Pitt")
+            {
+                std::cout << "Yep";
+            }
 
-            table2Temp[hash2Index].name = table2[i].name;
-            table2Temp[hash2Index].year = table2[i].year;
+            // call overloaded insert()
+            // It will hash its argument to tempTable1.
+            // Since we've already updated tableSize, this goes smoothly
+            insert(table2[i].name, table2[i].year, 0);
         }
     }
 
@@ -413,14 +422,19 @@ bool CuckooHash::rehash()
     delete[] table2;
 
     // point old array pointers to new arrays
-    table1 = table1Temp;
-    table2 = table2Temp;
+    table1 = tempTable1;
+    table2 = tempTable2;
 
     // make temp pointers point to null
-    table1Temp = nullptr;
-    table2Temp = nullptr;
+    tempTable1 = nullptr;
+    tempTable2 = nullptr;
 
     // 0 for good reallocation
+
+    if (contains("Tom Brady"))
+    {
+        std::cout << "He's here";
+    }
     return 0;
 }
 
@@ -523,3 +537,138 @@ int CuckooHash::position(const string &key, int &whichTable)
     // return -1 to delete() to signal that there is no record to delete
     return -1;
 }
+
+void CuckooHash::display() const
+{
+    for (int i = 0; i < tableSize; ++i) 
+    {
+        // if the key at this index has a value, display the key and value
+        //if (!table1[i].name.empty())
+        //{
+            std::cout << table1[i].name << " : " << table1[i].year << ", ";
+       // }
+    }
+
+    for (int i = 0; i < tableSize; ++i)
+    {
+        // do the same now for table 2
+        //if (!table2[i].name.empty())
+        //{
+            std::cout << table2[i].name << " : " << table2[i].year << ", ";
+        //}
+    }
+}
+
+/* insert() 
+*
+*  Overloaded for use as a helper for rehash()
+*/
+void CuckooHash::insert(const string &key, const int value, int signal)
+{
+    // we do nothing with "signal". It's purpose is purely to give rehash() an alternate signature of 
+    // insert() to call
+
+    // compute hash value 
+    int homePosition = hash1(key);     
+     
+    // try to insert in the home position
+    
+    // save a temporary copy of the data already there, if it exists
+    string tempKey;
+    int tempValue = 0;
+    bool needEvict = 0;
+    if (!tempTable1[homePosition].name.empty())
+    {
+        tempKey = tempTable1[homePosition].name;
+        tempValue = tempTable1[homePosition].year;
+        needEvict = 1;
+    }
+
+    // new data replaces the old occupant as the new owner of the index
+    tempTable1[homePosition].name = key;
+    tempTable1[homePosition].year = value;
+    
+    // if there was an eviction (flag is turned on), then call evictToTwo()
+    if (needEvict) 
+    {
+        evictToTwo(tempKey, tempValue);
+    }
+
+    return;
+}
+
+/* evictToOne() 
+*
+*  overloaded evictToOne() for rehash()
+*/
+void CuckooHash::evictToOne(const string &key, const int value)
+{
+    // try to insert in tempTable1
+    // compute the hash value for tempTable1
+    int hashVal2 = hash2(key); 
+    
+    // save a temporary copy of the data already there, if it exists
+    string tempKey;
+    int tempValue = 0;
+    bool needEvict = 0;
+    if (!tempTable1[hashVal2].name.empty())
+    {
+        tempKey = tempTable1[hashVal2].name;
+        tempValue = tempTable1[hashVal2].year;
+        needEvict = 1;
+    }
+
+    // new data replaces the old occupant as the new owner of the index
+    tempTable1[hashVal2].name = key;
+    tempTable1[hashVal2].year = value;
+    
+    // only increment nodeCount2 if the new key didn't evict a record
+    // (in which case we would be adding a record to tempTable1 but also removing a record from tempTable1)
+    if (!needEvict)
+    {
+        ++nodeCount2;
+
+        return;
+    }
+    // if there was an eviction (flag is turned on), then call evictToOne()
+    else 
+    {
+        evictToOne(tempKey, tempValue);
+    }
+
+    return;
+}
+        
+/* evictToTwo() 
+*
+*  overloaded evictToTwo() for rehash()
+*/
+void CuckooHash::evictToTwo(const string &key, const int value)
+{
+    // try to insert in tempTable2
+    // compute the hash value for tempTable2
+    int hashVal2 = hash2(key); 
+    
+    // save a temporary copy of the data already there, if it exists
+    string tempKey;
+    int tempValue = 0;
+    bool needEvict = 0;
+    if (!tempTable2[hashVal2].name.empty())
+    {
+        tempKey = tempTable2[hashVal2].name;
+        tempValue = tempTable2[hashVal2].year;
+        needEvict = 1;
+    }
+
+    // new data replaces the old occupant as the new owner of the index
+    tempTable2[hashVal2].name = key;
+    tempTable2[hashVal2].year = value;
+    
+    // if there was an eviction (flag is turned on), then call evictToOne()
+    if (needEvict)
+    {
+        evictToOne(tempKey, tempValue);
+    }
+
+    return;
+} 

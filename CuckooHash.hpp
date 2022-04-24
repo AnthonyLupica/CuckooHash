@@ -38,12 +38,14 @@ class CuckooHash
             int year;    // value 
         };
 
-        int tableSize;           // table size (will use PRIME_LIST for rehash values)
-        struct HashNode* table1; // the primary hash table 
-        struct HashNode* table2; // the secondary "eviction" table 
-        int tableSizeCounter;    // keeps track of which index of PRIME_LIST is in use (for rehash())
-        int nodeCount1;          // keeps track of the number of initialized nodes in table1
-        int nodeCount2;          // keeps track of the number of initialized nodes in table2
+        int tableSize;               // table size (will use PRIME_LIST for rehash values)
+        struct HashNode* table1;     // the primary hash table 
+        struct HashNode* table2;     // the secondary "eviction" table 
+        int tableSizeCounter;        // keeps track of which index of PRIME_LIST is in use (for rehash())
+        int nodeCount1;              // keeps track of the number of initialized nodes in table1
+        int nodeCount2;              // keeps track of the number of initialized nodes in table2
+        struct HashNode* tempTable1; // tempTable for rehash() 
+        struct HashNode* tempTable2; // tempTable for rehash() 
 
         int hash1(const string &key);                                        // hash function for table1
         int hash2(const string &key);                                        // hash function for table2
@@ -52,6 +54,9 @@ class CuckooHash
         void evictToTwo(const string &key, const int value, int staticPass); // finds evicted records a new home in table 2
         bool rehash();                                                       // rehash method to increase the tableSize;
         int position(const string &key, int &whichTable);                    // helper for delete(). Returns the index of a found record
+        void insert(const string &key, const int value, int signal);         // overloaded insert() for rehash()
+        void evictToOne(const string &key, const int value);                 // overloaded evictToOne() for rehash()
+        void evictToTwo(const string &key, const int value);                 // overloaded evictToTwo() for rehash()
 
     public: 
 
@@ -64,7 +69,8 @@ class CuckooHash
         void remove(const string &key);                  // remove method 
         bool contains(const string &key);                // contains method    
         int size() const                                 // getter for the number of records (in table1 + in table2)
-        { return nodeCount1 + nodeCount2; }    
+        { return nodeCount1 + nodeCount2; }   
+        void display() const;                            // display the hash table  
 };
 
 #endif // CUCKOOHASH_HPP_INCLUDED
