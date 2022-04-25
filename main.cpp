@@ -74,44 +74,15 @@ int main()
     cout << "\n";
     hashTest.display();
 
-    // test inputs in a loop
-    CuckooHash loopTest;
-
-    cout << "\n\ntableSize increases for inserts in a loop: ";
-    for (int i = 33; i < 126; ++i)
-    {
-        char init[] = {i, '\0'};
-        string initString(init);
-        loopTest.insert(initString, 1000);
-        cout << loopTest.capacity() << " ";
-    }
-    cout << "\n\n";
-
-    assert(loopTest.size() == 93 && "An unexpected size was returned");
-    loopTest.display();
     //-------------------------------------------//
 
     //---------------- Test Cases ---------------//
 
-    cout << "\nTEST CASES\n\n";
+    cout << "\nTEST CASES\n";
 
     timer hashTime;
 
-    CuckooHash loopTest2;
-
-    cout << "Try to induce secondary clustering and long eviction cycles...\n\n";
-    for (int i = 33; i < 63; ++i)
-    {
-        hashTime.restart();
-        char init[] = {'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', i, i * 3, i + 1, '\0'};
-        string initString(init);
-        loopTest2.insert(initString, 1000);
-        hashTime.stop();
-        
-        cout << "insert " << loopTest2.size() << " for key " << initString << ": " << hashTime.time() << " seconds\n";
-    }
-
-    cout << "\n\nProvide a list of celebrities with wide character variation...\n\n";
+    cout << "\nProvide a list of celebrities with wide character variation...\n\n";
 
     const int NUM_CELEB = 30;
     string celebList[NUM_CELEB] = {"Jake Gyllenhaal", "Zendaya", "Tom Holland", "Dax Shepard", "Winona Ryder", "Michael Fassbender", "Ice Cube",
@@ -134,35 +105,5 @@ int main()
     hashCeleb.display();
     cout << "\n";
 
-    cout << "Test search on the clustered records...\n\n";
-    for (int i = 33; i < 63; ++i)
-    {
-        hashTime.restart();
-        char init[] = {'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', i, i * 3, i + 1, '\0'};
-        string initString(init);
-        loopTest2.search(initString);
-        hashTime.stop();
-        
-        cout << "search for key " << initString << ": " << hashTime.time() << " seconds\n";
-    }
-
-    cout << "\nTest search on the non-clustered records...\n\n";
-    for (int i = 0; i < NUM_CELEB; ++i)
-    {
-        hashTime.restart();
-        hashCeleb.search(celebList[i]);
-        hashTime.stop();
-
-        cout << "search for key " << celebList[i] << ": " << hashTime.time() << " seconds\n";
-    }
-  
     //-------------------------------------------//
-
-    //---------- Compare to Two-Choice ----------//
-
-
-
-    //-------------------------------------------//
-
-    return 0;
 }
