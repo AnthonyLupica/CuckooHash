@@ -16,12 +16,16 @@
 #include "Complexity_Timer.hpp"
 #include <iostream>
 #include <cassert>
+#include <string>
 
 using std::cout;
 
 int main()
 {
     //----- Testing Section For Correctness -----//
+
+    cout << "\nTESTING FOR CORRECTNESS\n\n";
+
     // create a hash table object, call it hashTest, and initialize with a name and birth year
     CuckooHash hashTest("Brad Pitt", 1963);
     
@@ -85,6 +89,79 @@ int main()
 
     assert(loopTest.size() == 93 && "An unexpected size was returned");
     loopTest.display();
+    //-------------------------------------------//
+
+    //---------------- Test Cases ---------------//
+
+    cout << "\nTEST CASES\n\n";
+
+    timer hashTime;
+
+    CuckooHash loopTest2;
+
+    cout << "Try to induce secondary clustering and long eviction cycles...\n\n";
+    for (int i = 33; i < 63; ++i)
+    {
+        hashTime.restart();
+        char init[] = {'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', i, i * 3, i + 1, '\0'};
+        string initString(init);
+        loopTest2.insert(initString, 1000);
+        hashTime.stop();
+        
+        cout << "insert " << loopTest2.size() << " for key " << initString << ": " << hashTime.time() << " seconds\n";
+    }
+
+    cout << "\n\nProvide a list of celebrities with wide character variation...\n\n";
+
+    const int NUM_CELEB = 30;
+    string celebList[NUM_CELEB] = {"Jake Gyllenhaal", "Zendaya", "Tom Holland", "Dax Shepard", "Winona Ryder", "Michael Fassbender", "Ice Cube",
+                          "Björk", "Matthew McConaughey", "George Washington", "Julian Casablancas", "Taylor Swift", "Hugh Laurie", 
+                          "Alanis Morissette", "Kyrie Irving", "Jason Mraz", "Henry VIII", "Dr. Phil", "Zach Galifianakis", "Adele", "Cardi B", 
+                          "Alicia Keys", "Ellen DeGeneres", "Joaquin Phoenix", "Tony Leung", "Drake", "Robert Herjavec", "Idris Elba", "Javier Bardem", "Jay-Z"};
+    int birthList[] = {1980, 1996, 1996, 1975, 1971, 1977, 1969, 1965, 1969, 1732, 1978, 1989, 1959, 1974, 1992, 1977, 1491, 1950, 1969, 1988, 1992,
+                       1981, 1958, 1974, 1962, 1986, 1962, 1972, 1969, 1969};
+
+    CuckooHash hashCeleb;
+    for (int i = 0; i < NUM_CELEB; ++i)
+    {
+        hashTime.restart();
+        hashCeleb.insert(celebList[i], birthList[i]);
+        hashTime.stop();
+
+        cout << "insert " << hashCeleb.size() << " for key " << celebList[i] << ": " << hashTime.time() << " seconds\n";
+    }
+    cout << "\n";
+    hashCeleb.display();
+    cout << "\n";
+
+    cout << "Test search on the clustered records...\n\n";
+    for (int i = 33; i < 63; ++i)
+    {
+        hashTime.restart();
+        char init[] = {'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', i, i * 3, i + 1, '\0'};
+        string initString(init);
+        loopTest2.search(initString);
+        hashTime.stop();
+        
+        cout << "search for key " << initString << ": " << hashTime.time() << " seconds\n";
+    }
+
+    cout << "\nTest search on the non-clustered records...\n\n";
+    for (int i = 0; i < NUM_CELEB; ++i)
+    {
+        hashTime.restart();
+        hashCeleb.search(celebList[i]);
+        hashTime.stop();
+
+        cout << "search for key " << celebList[i] << ": " << hashTime.time() << " seconds\n";
+    }
+  
+    //-------------------------------------------//
+
+    //---------- Compare to Two-Choice ----------//
+
+
+
     //-------------------------------------------//
 
     return 0;
