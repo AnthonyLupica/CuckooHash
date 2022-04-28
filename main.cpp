@@ -12,7 +12,6 @@
 */
 
 #include "CuckooHash.hpp"
-#include "DSProject3-TwoChoice(AndyMee).txt"
 #include "Complexity_Timer.hpp"
 #include <iostream>
 #include <cassert>
