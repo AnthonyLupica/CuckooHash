@@ -536,13 +536,13 @@ void CuckooHash::display() const
         // if the key at this index has a value, display the key and value
         if (!table1[i].name.empty())
         {
-            std::cout << "| " << table1[i].name << " : " << table1[i].year << " |";
+            std::cout << table1[i].name << " : " << table1[i].year << "\n";
         }
 
         // do the same now for table 2
         if (!table2[i].name.empty())
         {
-            std::cout << "| " << table2[i].name << " : " << table2[i].year << " |";
+            std::cout << table2[i].name << " : " << table2[i].year << "\n";
         }
     }
     // output a new line
