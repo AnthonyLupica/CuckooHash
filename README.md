@@ -1,11 +1,6 @@
-# Data Structures Project3 - Hashing 
+## Data Structures Project3 - Hashing 
 
-Assigned CuckooHash
-
-# Instructions
-
-
-The Data Structures Project 3
+### Instructions
 
 Outline for CS316 ‘Project Hash’
 
