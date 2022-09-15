@@ -4,24 +4,21 @@
 
 Outline for CS316 ‘Project Hash’
 
-Project:
+#### Project
 
 This next project is called Project Hash. Refer to project 2 for any details about these class projects, and
 the theme is test and measure.
 
-Deliverables:
+#### Deliverables
 
 Same deliverables that includes a compiled research document and C ++ code
-
 
 Repeating the requirements:
    1) A research paper (use the provided example as your guide). Research papers 10 pages (no code);
    2) Supporting code that works (runs) and supports your research (using your programming skill in
        C++).
 
-
-
-Input and Output:
+#### Input and Output
 
 Standard C++ programs can be invoked using any IDE or the program may be invoked from the
 command-line. The inputs are user defined test cases and the output for this project are the results
@@ -42,7 +39,7 @@ Did you:
     - Submit 10 pages that did not include any code examples?
     - Provide working code?
 
-Test case requirement:
+#### Test case requirement
 
 What are we testing? See the lists below for your experiment assignment. If ‘assigned to’ has your
 number listed then that is the structure you will be undertaking for this project. You will write the
@@ -79,30 +76,7 @@ H7 - Hopscotch hashing                       1,10,19,28            Anyone
 
 H8 - Two-choice hashing                      2,11,20               Anyone
 
-
-
-
-The list of experimenters can be found in the project folder, aptly named ‘list of experimenters’.
-Remember, there intentionally are more possible experimenters listed above and we only need ONE
-other test instances.
-
-Note for your project to receive a grade, you must find a partner experimenter as mentioned above.
-Test case ideas:
-Same as before
-
-How do I get my project to be graded?
-Include one other experimenter. Provide true, runtime and space analytics found in our materials
-regarding hashing. Paper must be 10 fully qualified pages. (Paper is 10 pages and does not include my
-code examples.)
-
-Sourcecode:
-You must create your own source code that is used as the focus or basis of the test and subsequent
-hypothesis. Combine that with your partners and submit for code credit.
-
-
-Rubric:
-
-
+#### Rubric
 
                                                                                               
                Research                                                75 points
@@ -147,14 +121,3 @@ Summary/notes:
     -    Your program may not use anything from the Standard Template Library for your data structure;
     -    Your program should run tests against ONE other experimenters;
     -    Make sure your program can pass the test cases before submitting the code.
-
-
-What code do I submit? You will need to submit another experimenter’s code with yours, and it must
-produce the outcomes found in your report.
-
-Submission Instructions – for programming solutions
-
-On Brightspace, go to the matching folder for the Project ??, where ?? is the project name of the project
-that is assigned (eg., Project Treeeeps for the second project), and submit the appropriate documents,
-which includes any code (cpp) and header files (hpp), and the project analysis (doc, docx) that is at least
-10 pages. So, your program code and the report (document) is all you will submit.
